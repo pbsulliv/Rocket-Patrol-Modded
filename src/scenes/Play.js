@@ -31,9 +31,9 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipAni', 0, 30).setScale(2, 2).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceship', 0, 10).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipAni', 0, 30).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceshipAni', 0, 20).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceshipAni', 0, 10).setOrigin(0,0);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -50,11 +50,15 @@ class Play extends Phaser.Scene {
         // spaceship animation config
         this.anims.create({
             key: 'spaceshipAni',
-            frames: this.anims.generateFrameNumbers('spaceshipAni', { start: 0, end: 4, first: 0}),
-            frameRate: 5
+            frames: this.anims.generateFrameNumbers('spaceshipAni', { start: 0, end: 3, first: 0}),
+            frameRate: 10,
+            repeat: -1
         });
 
+        //Animate Spaceships
         this.ship01.anims.play('spaceshipAni');
+        this.ship02.anims.play('spaceshipAni');
+        this.ship03.anims.play('spaceshipAni');
 
         // score
         this.p1Score = 0;
@@ -87,6 +91,7 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyF)) {
             this.scene.restart(this.p1Score);
