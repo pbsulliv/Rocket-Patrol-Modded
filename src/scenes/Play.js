@@ -11,6 +11,8 @@ class Play extends Phaser.Scene {
 
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('spaceshipAni', './assets/Spaceship1SpriteSheet1.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+
     }
 
     create() {
@@ -29,7 +31,7 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceship', 0, 30).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipAni', 0, 30).setScale(2, 2).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceship', 0, 10).setOrigin(0,0);
 
@@ -38,12 +40,21 @@ class Play extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        // animation config
+        // explosion animation config
         this.anims.create({
             key: 'explode',
             frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
             frameRate: 30
         });
+
+        // spaceship animation config
+        this.anims.create({
+            key: 'spaceshipAni',
+            frames: this.anims.generateFrameNumbers('spaceshipAni', { start: 0, end: 4, first: 0}),
+            frameRate: 5
+        });
+
+        this.ship01.anims.play('spaceshipAni');
 
         // score
         this.p1Score = 0;
@@ -137,4 +148,5 @@ class Play extends Phaser.Scene {
         this.scoreLeft.text = this.p1Score; 
         this.sound.play('sfx_explosion');       // play sound         
     }
+
 }
