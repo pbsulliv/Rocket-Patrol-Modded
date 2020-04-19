@@ -13,6 +13,8 @@ class Play extends Phaser.Scene {
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         this.load.spritesheet('spaceshipAni', './assets/Spaceship1SpriteSheet1.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+        this.load.spritesheet('spaceshipStealth', './assets/StealthShip-sheet.png', {frameWidth: 40, frameHeight: 55, startFrame: 0, endFrame: 43});
+
 
     }
 
@@ -21,7 +23,7 @@ class Play extends Phaser.Scene {
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipAni', 0, 30, game.settings.spaceshipSpeed).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipStealth', 0, 30, game.settings.spaceshipSpeed).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceshipAni', 0, 20, game.settings.spaceshipSpeed).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceshipAni', 0, 10, game.settings.spaceshipSpeed).setOrigin(0,0);
 
@@ -56,8 +58,16 @@ class Play extends Phaser.Scene {
             repeat: -1
         });
 
+        // stealthship animation config
+        this.anims.create({
+            key: 'spaceshipStealth',
+            frames: this.anims.generateFrameNumbers('spaceshipStealth', { start: 0, end: 43, first: 0}),
+            frameRate: 20,
+            repeat: -1
+        });
+
         //Animate Spaceships
-        this.ship01.anims.play('spaceshipAni');
+        this.ship01.anims.play('spaceshipStealth');
         this.ship02.anims.play('spaceshipAni');
         this.ship03.anims.play('spaceshipAni');
 
