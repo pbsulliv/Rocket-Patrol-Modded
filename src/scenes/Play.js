@@ -37,6 +37,8 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('explosion2', './assets/explosion2.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 25});
         this.load.spritesheet('spaceshipAni', './assets/Spaceship1SpriteSheet1.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.spritesheet('spaceshipStealth', './assets/StealthShip-sheet.png', {frameWidth: 40, frameHeight: 55, startFrame: 0, endFrame: 43});
+        this.load.spritesheet('RocketAni', './assets/Rocket2-sheet.png', {frameWidth: 32, frameHeight: 16, startFrame: 0, endFrame: 8});
+
 
 
     }
@@ -69,7 +71,7 @@ class Play extends Phaser.Scene {
         this.add.rectangle(37, 42, 566, 64, 0x00FF00).setOrigin(0, 0);
 
         // add rocket (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
+        this.p1Rocket = new Rocket(this, game.config.width/2, 420, 'RocketAni').setOrigin(0, 0);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -95,6 +97,14 @@ class Play extends Phaser.Scene {
         this.anims.create({
             key: 'spaceshipStealth',
             frames: this.anims.generateFrameNumbers('spaceshipStealth', { start: 0, end: 43, first: 0}),
+            frameRate: 20,
+            repeat: -1
+        });
+
+        // Rocket animation config
+        this.anims.create({
+            key: 'RocketAni',
+            frames: this.anims.generateFrameNumbers('RocketAni', { start: 0, end: 8, first: 0}),
             frameRate: 20,
             repeat: -1
         });
