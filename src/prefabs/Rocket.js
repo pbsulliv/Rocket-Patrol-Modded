@@ -25,7 +25,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
         }
         // if fired, move up
         if(this.isFiring && this.y >= 108) {
-            //this.Rocket.anims.play('RocketAni');
+            this.anims.play('RocketAni');
             this.y -= 2;
         }
         // reset on miss
