@@ -2,6 +2,9 @@
 class Play extends Phaser.Scene {
     constructor() {
       super("playScene");
+      
+      // holds the time that the game actually started
+      this.startTime = undefined;
     }
     
     preload() {
@@ -33,7 +36,7 @@ class Play extends Phaser.Scene {
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipStealth', 0, 30, this.nextShipPositionSin).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipStealth', 0, 40, this.nextShipPositionSin).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceshipAni', 0, 20, this.nextShipPositionConstant).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceshipAni', 0, 10, this.nextShipPositionConstant).setOrigin(0,0);
 
@@ -109,12 +112,34 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+
+        // timer display
+        let timerConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.timerRight = this.add.text(471, 54, game.settings.gameTimer, timerConfig);
     }
 
     update() {
+        // record the time when the game actually started playing
+        if (this.startTime === undefined) {
+            this.startTime = this.time.now;
+        }
 
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyF)) {
+            // reset startTime for the next game
+            this.startTime = undefined;
+
             this.scene.restart(this.p1Score);
         }
 
@@ -145,6 +170,24 @@ class Play extends Phaser.Scene {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
+
+        let timeLeft;
+
+        if (!this.gameOver) {
+            const timeLeftMillis = game.settings.gameTimer + this.startTime - this.time.now;
+            timeLeft = Math.round(timeLeftMillis / 1000);
+        }
+    
+        // check if game is over
+        if (timeLeft <= 0) {
+
+        }
+
+        if (this.gameOver) {
+            timeLeft = "";        
+        }
+
+        this.timerRight.text = timeLeft;
     }
 
     checkCollision(rocket, ship) {
