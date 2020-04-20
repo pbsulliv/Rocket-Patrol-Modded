@@ -48,7 +48,7 @@ class Play extends Phaser.Scene {
       return x - game.settings.spaceshipSpeed;
     }
 
-    create() {
+    create() {        
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
@@ -128,6 +128,10 @@ class Play extends Phaser.Scene {
         }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            // reset startTime and extra time for the next game
+            this.startTime = undefined;
+            this.extraTime = 0;
+            
             this.scene.start("menuScene");
         }
 
