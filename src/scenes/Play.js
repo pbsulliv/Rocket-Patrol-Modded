@@ -5,6 +5,23 @@ class Play extends Phaser.Scene {
       
       // holds the time that the game actually started
       this.startTime = undefined;
+
+      // no extra time left
+      this.extraTime = 0;
+
+      // score display
+      this.scoreConfig = {
+          fontFamily: 'Courier',
+          fontSize: '28px',
+          backgroundColor: '#F3B141',
+          color: '#843605',
+          align: 'right',
+          padding: {
+              top: 5,
+              bottom: 5,
+          },
+          fixedWidth: 100
+      }
     }
     
     preload() {
@@ -87,6 +104,7 @@ class Play extends Phaser.Scene {
         // score
         this.p1Score = 0;
 
+        /*
         // score display
         let scoreConfig = {
             fontFamily: 'Courier',
@@ -100,21 +118,25 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(69, 54, this.p1Score, scoreConfig);
+        */
+        this.scoreLeft = this.add.text(69, 54, this.p1Score, this.scoreConfig);
 
         // game over flag
         this.gameOver = false;
 
         // play clock
-        scoreConfig.fixedWidth = 0;
+        //scoreConfig.fixedWidth = 0;
+        /*
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+        */
 
+        /*
         // timer display
-        let timerConfig = {
+        const timerConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
             backgroundColor: '#F3B141',
@@ -126,7 +148,8 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.timerRight = this.add.text(471, 54, game.settings.gameTimer, timerConfig);
+        */
+        this.timerRight = this.add.text(471, 54, game.settings.gameTimer, this.scoreCOnfig);
     }
 
     update() {
@@ -180,7 +203,10 @@ class Play extends Phaser.Scene {
     
         // check if game is over
         if (timeLeft <= 0) {
-
+            const labelConfig = {...this.scoreConfig, fixedWidth:0};
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', labelConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or ← for Menu', labelConfig).setOrigin(0.5);
+            this.gameOver = true;
         }
 
         if (this.gameOver) {
