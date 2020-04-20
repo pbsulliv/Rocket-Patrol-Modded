@@ -9,6 +9,9 @@ class Play extends Phaser.Scene {
       // no extra time left
       this.extraTime = 0;
 
+      // extra speed
+      this.extraSpeed = 0;
+
       // score display
       this.scoreConfig = {
           fontFamily: 'Courier',
@@ -31,31 +34,31 @@ class Play extends Phaser.Scene {
         this.load.image('starfield', './assets/starfield2.png');
 
         // load spritesheet
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('explosion2', './assets/explosion2.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 25});
         this.load.spritesheet('spaceshipAni', './assets/Spaceship1SpriteSheet1.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.spritesheet('spaceshipStealth', './assets/StealthShip-sheet.png', {frameWidth: 40, frameHeight: 55, startFrame: 0, endFrame: 43});
 
 
     }
 
-    // calculates the next ship position using a variable speed based on a sine curve
-    nextShipPositionSin(x) {
-      return x - (1 + game.settings.spaceshipSpeed * (1 + Math.sin(x * Math.PI / 106)));
-    }
-  
-    // calculates the next ship position using the global space ship speed
-    nextShipPositionConstant(x) {
-      return x - game.settings.spaceshipSpeed;
-    }
+    create() {    
+        // calculates the next ship position using the global space ship speed    
+        const nextShipPositionConstant = (x) => {
+            return x - game.settings.spaceshipSpeed - this.extraSpeed;
+        };
 
-    create() {        
+        // calculates the next ship position using the global space ship speed
+        const nextShipPositionSin = (x) => {
+            return x - (1 + (game.settings.spaceshipSpeed + this.extraSpeed)  * (1 + Math.sin(x * Math.PI / 106)));
+        };
+
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipStealth', 0, 40, this.nextShipPositionSin).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceshipAni', 0, 20, this.nextShipPositionConstant).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceshipAni', 0, 10, this.nextShipPositionConstant).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceshipStealth', 0, 40, nextShipPositionSin).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceshipAni', 0, 20, nextShipPositionConstant).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceshipAni', 0, 10, nextShipPositionConstant).setOrigin(0,0);
 
         // white rectangle borders
         this.add.rectangle(5, 5, 630, 32, 0xFFFFFF).setOrigin(0, 0);
@@ -76,7 +79,7 @@ class Play extends Phaser.Scene {
         // explosion animation config
         this.anims.create({
             key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
+            frames: this.anims.generateFrameNumbers('explosion2', { start: 0, end: 25, first: 0}),
             frameRate: 30
         });
 
@@ -123,6 +126,7 @@ class Play extends Phaser.Scene {
             // reset startTime and extra time for the next game
             this.startTime = undefined;
             this.extraTime = 0;
+            this.extraSpeed = 0;
 
             this.scene.restart(this.p1Score);
         }
@@ -131,7 +135,8 @@ class Play extends Phaser.Scene {
             // reset startTime and extra time for the next game
             this.startTime = undefined;
             this.extraTime = 0;
-            
+            this.extraSpeed = 0;
+        
             this.scene.start("menuScene");
         }
 
@@ -160,6 +165,11 @@ class Play extends Phaser.Scene {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
             this.extraTime += 6000;
+        }
+
+        // speed up ships after 30 seconds
+        if (this.time.now - this.startTime > 30000) {
+            this.extraSpeed = 1;
         }
 
         let timeLeft;

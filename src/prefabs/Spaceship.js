@@ -11,7 +11,8 @@ class Spaceship extends Phaser.GameObjects.Sprite {
 
     update() {
         // move spaceship left
-        this.x = this.positionFunc(this.x);
+        const positionFunc = this.positionFunc;
+        this.x = positionFunc(this.x);
      
         // wraparound screen bounds
         if (this.x <= 0 - this.width) {
